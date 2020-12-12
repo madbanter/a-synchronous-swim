@@ -11,6 +11,7 @@ const httpHandler = require('../js/httpHandler');
 describe('server responses', () => {
 
   it('should respond to a OPTIONS request', (done) => {
+
     let {req, res} = server.mock('/', 'OPTIONS');
 
     httpHandler.router(req, res);
@@ -22,7 +23,20 @@ describe('server responses', () => {
   });
 
   it('should respond to a GET request for a swim command', (done) => {
-    // write your test here
+
+    let directions = ['left', 'right', 'up', 'down'];
+
+    let {req, res} = server.mock('/', 'GET');
+// test = server.mock('/', 'GET');
+// let req = test.req;
+// let res = test.res;
+
+
+    httpHandler.router(req, res);
+    expect(res._responseCode).to.equal(200);
+    expect(res._ended).to.equal(true);
+    expect(directions.includes(res._data.toString())).to.be.true;
+
     done();
   });
 
