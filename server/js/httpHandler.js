@@ -10,6 +10,7 @@ module.exports.backgroundImageFile = path.join('.', 'background.jpg');
 let messageQueue = null;
 module.exports.initialize = (queue) => {
   messageQueue = queue;
+
 };
 
 module.exports.router = (req, res, next = ()=>{}) => {
@@ -20,12 +21,13 @@ module.exports.router = (req, res, next = ()=>{}) => {
       break;
     case 'GET':
       let body = [];
-      let directions = ['left', 'right', 'up', 'down'];
-      let direction = directions[Math.floor(Math.random() * directions.length)];
-      body.push(direction);
-      res.writeHead(200, headers);
-      body = body.toString();
-      res.write(body);
+      req.on('data', (chunk) => {
+        body.push(chunk);
+      }).on('end', () => {
+        res.writeHead(200, headers);
+        body = body.toString();
+        res.write(body);
+      });
       break;
   }
   res.end();

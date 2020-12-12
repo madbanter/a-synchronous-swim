@@ -9,10 +9,10 @@
   // test with valid and invalid responses
   // GET http://127.0.0.1:3000/
   // respond with random entry from directions array
-  const swimCommandFetch = () => {
+  const swimCommandFetch = (direction) => {
     $.ajax({
       type: 'GET',
-      data: null,
+      data: direction,
       url: serverUrl,
       cache: false,
       contentType: false,
@@ -28,9 +28,9 @@
   $('body').on('keydown', (event) => {
     var arrowPress = event.key.match(/Arrow(Up|Down|Left|Right)/);
     if (arrowPress) {
-      var direction = arrowPress[1];
+      var direction = arrowPress[1].toLowerCase();
       // SwimTeam.move(direction.toLowerCase());
-      swimCommandFetch();
+      swimCommandFetch(direction);
     }
   });
 
