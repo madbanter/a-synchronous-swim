@@ -17,19 +17,18 @@ module.exports.router = (req, res, next = ()=>{}) => {
   switch(req.method) {
     case 'OPTIONS':
       res.writeHead(200, headers);
+      next();
+      res.end()
       break;
     case 'GET':
       let body = [];
-      req.on('data', (chunk) => {
-        body.push(chunk);
-      }).on('end', () => {
-        res.writeHead(200, headers);
-        body = body.toString();
-        res.write(body);
-      });
+      let commands = ['up', 'down', 'left', 'right'];
+      body.push(commands[Math.floor(Math.random() * commands.length)]);
+      res.writeHead(200, headers);
+      res.end(body);
+      next();
       break;
+    });
   }
-  res.end();
-  next(); // invoke next() at the end of a request to help with testing!
 };
 
