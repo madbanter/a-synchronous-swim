@@ -10,7 +10,6 @@ module.exports.backgroundImageFile = path.join('.', 'background.jpg');
 let messageQueue = null;
 module.exports.initialize = (queue) => {
   messageQueue = queue;
-
 };
 
 module.exports.router = (req, res, next = ()=>{}) => {
