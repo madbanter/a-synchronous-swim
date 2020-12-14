@@ -9,30 +9,19 @@
   // test with valid and invalid responses
   // GET http://127.0.0.1:3000/
   // respond with random entry from directions array
-  const swimCommandFetch = (direction) => {
-    $.ajax({
+  const swimCommandFetch = () => {
+    $.get({
       type: 'GET',
-      data: direction,
       url: serverUrl,
-      cache: false,
-      contentType: false,
-      processData: false,
-      success: (response, status) => {
-        console.log('Message Recieved!');
-        console.log(response);
-        SwimTeam.move(response);
+      success: (direction) => {
+        SwimTeam.move(direction);
+      }
+      complete: () => {
+        setTimeout(fetchCommand, 50);
       }
     });
-  }
-
-  $('body').on('keydown', (event) => {
-    var arrowPress = event.key.match(/Arrow(Up|Down|Left|Right)/);
-    if (arrowPress) {
-      var direction = arrowPress[1].toLowerCase();
-      // SwimTeam.move(direction.toLowerCase());
-      swimCommandFetch(direction);
-    }
-  });
+  };
+  swimCommandFetch();
 
   /////////////////////////////////////////////////////////////////////
   // The ajax file uplaoder is provided for your convenience!
@@ -45,7 +34,7 @@
     $.ajax({
       type: 'POST',
       data: formData,
-      url: serverUrl,
+      url: serverUrl + '/background.jpg',
       cache: false,
       contentType: false,
       processData: false,

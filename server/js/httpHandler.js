@@ -25,7 +25,6 @@ module.exports.router = (req, res, next = ()=>{}) => {
         res.writeHead(200, headers);
         res.end(messageQueue.dequeue);
         next();
-        break;
       } else if (req.url === '/background.jpg') {
         fs.readFile(module.exports.backgroundImageFile, (err, data) => {
           if (err) {
@@ -36,10 +35,28 @@ module.exports.router = (req, res, next = ()=>{}) => {
           }
           res.end()
           next();
-          break;
         });
       }
-    });
+      break;
+    case 'POST':
+      if (req.url === '/background.jpg') {
+        var fileData = Buffer.alloc(0);
+        req.on('data', (chunk) => {
+          fileData = Buffer.concat([fileData, chunk]);
+        });
+
+        req.on('end', () => {
+          var file = multipart.getFile(fileData);
+          fs.writeFile(module.exports.backgroundImageFile, file.data, (err) => {
+            res.writeHead(err ? 400 : 201, headers);
+            res.end();
+            next();
+          });
+        });
+
+      }
+      break;
+     });
   }
 };
 
