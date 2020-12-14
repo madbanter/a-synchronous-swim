@@ -17,17 +17,28 @@ module.exports.router = (req, res, next = ()=>{}) => {
   switch(req.method) {
     case 'OPTIONS':
       res.writeHead(200, headers);
-      next();
       res.end()
+      next();
       break;
     case 'GET':
-      let body = [];
-      let commands = ['up', 'down', 'left', 'right'];
-      body.push(commands[Math.floor(Math.random() * commands.length)]);
-      res.writeHead(200, headers);
-      res.end(body);
-      next();
-      break;
+      if (req.url === '/') {
+        res.writeHead(200, headers);
+        res.end(messageQueue.dequeue);
+        next();
+        break;
+      } else if (req.url === '/background.jpg') {
+        fs.readFile(module.exports.backgroundImageFile, (err, data) => {
+          if (err) {
+            res.writeHead(404, headers);
+          } else {
+            res.writeHead(200, headers);
+            res.write(data, 'binary');
+          }
+          res.end()
+          next();
+          break;
+        });
+      }
     });
   }
 };

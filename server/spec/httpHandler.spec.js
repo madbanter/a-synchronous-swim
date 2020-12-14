@@ -23,26 +23,25 @@ describe('server responses', () => {
   });
 
   it('should respond to a GET request for a swim command', (done) => {
-
-    let directions = ['left', 'right', 'up', 'down'];
-
     let {req, res} = server.mock('/', 'GET');
-// test = server.mock('/', 'GET');
-// let req = test.req;
-// let res = test.res;
 
+    const queue = require('../js/messageQueue');
+    httpHandler.initialize(queue);
+
+    const directions = ['left', 'right', 'up', 'down'];
+    queue.enqueue('up');
 
     httpHandler.router(req, res);
     expect(res._responseCode).to.equal(200);
     expect(res._ended).to.equal(true);
-    expect(directions.includes(res._data.toString())).to.be.true;
+    expect(directions.to.contain(res._data.toString()));
 
     done();
   });
 
-  xit('should respond with 404 to a GET request for a missing background image', (done) => {
-    httpHandler.backgroundImageFile = path.join('.', 'spec', 'missing.jpg');
-    let {req, res} = server.mock('FILL_ME_IN', 'GET');
+  it('should respond with 404 to a GET request for a missing background image', (done) => {
+    httpHandler.backgroundImageFile = path.join('.', 'spec', 'water-lg.jpg');
+    let {req, res} = server.mock('/background.jpg', 'GET');
 
     httpHandler.router(req, res, () => {
       expect(res._responseCode).to.equal(404);
