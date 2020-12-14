@@ -50,9 +50,15 @@ describe('server responses', () => {
     });
   });
 
-  xit('should respond with 200 to a GET request for a present background image', (done) => {
-    // write your test here
-    done();
+  it('should respond with 200 to a GET request for a present background image', (done) => {
+    httpHandler.backgroundImageFile = path.join('.', 'spec', 'water-sm.jpg');
+    let {req, res} = server.mock('/background.jpg', 'GET');
+
+    httpHandler.router(req, res, () => {
+      expect(res._responseCode).to.equal(200);
+      expect(res._ended).to.equal(true);
+      done();
+    });
   });
 
   var postTestFile = path.join('.', 'spec', 'water-lg.multipart');
@@ -70,7 +76,7 @@ describe('server responses', () => {
     });
   });
 
-  xit('should send back the previously saved image', (done) => {
+  it('should send back the previously saved image', (done) => {
     fs.readFile(postTestFile, (err, fileData) => {
       httpHandler.backgroundImageFile = path.join('.', 'spec', 'temp.jpg');
       let post = server.mock('/background.jpg', 'POST', fileData);
